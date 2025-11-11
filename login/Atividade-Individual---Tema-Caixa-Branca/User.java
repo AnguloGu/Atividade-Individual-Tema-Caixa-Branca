@@ -1,74 +1,74 @@
-package login; // Define o pacote onde esta classe está localizada
+package login; // Aqui eu defino o pacote onde essa classe está
 
-// Importa as bibliotecas
+// Importa as bibliotecas necessárias pra conectar no banco
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-//conecta ao banco e verificar o login de um usuário
+// Classe usada pra conectar no banco e verificar o login de um usuário
 public class User {
 
-    //realiza a conexão com o banco de dados
+    // Faz a conexão com o banco de dados
     public Connection conectarBD(){
-        Connection conn = null; // Cria uma variável de conexão inicialmente nula
+        Connection conn = null; // Cria uma variável pra guardar a conexão
         try{
-            // Inicializa o driver JDBC do MySQL.
-            // Professor no seu código inicial usava "com.mysql.Driver.Manager", 
-            // mas esse nome não existe. O correto é "com.mysql.cj.jdbc.Driver",
-            // que é a forma atual de iniciar o driver e permitir conexões então ja deixei alterado.
-            Class.forName("com.mysql.cj.jdbc.Driver");  
+            // Aqui é onde o driver do MySQL é iniciado.
+            // professor você tinha colocado "com.mysql.Driver.Manager", mas isso dá erro.
+            // Então eu troquei pra "com.mysql.cj.jdbc.Driver", que é o jeito certo e atual de conectar.
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // Cria a URL de conexão com o banco.
+            // Cria a URL da conexão com o banco (com usuário e senha)
             String url = "jdbc:mysql://127.0.0.1/test?user=lopes&password=123";
 
-            // Abre a conexão com o banco de dados usando a URL acima
+            // Abre a conexão com o banco usando a URL acima
             conn = DriverManager.getConnection(url);
         }catch (Exception e) {
-            // Caso ocorra algum erro (como driver ausente ou banco inacessível),
-            // o erro é capturado aqui. O tratamento está vazio, mas poderia exibir uma mensagem.
+            // Se der algum erro (tipo driver faltando ou banco fora do ar),
+            // ele cai aqui. Não tem mensagem, mas daria pra mostrar uma.
         }
-        // Retorna o objeto de conexão (pode ser null se algo der errado)
+        // Retorna a conexão (ou null se algo deu errado)
         return conn;
     }
 
-    // Variável para guardar o nome do usuário encontrado no banco
+    // Guarda o nome do usuário que foi encontrado no banco
     public String nome = "";
 
-    // Variável que indica se o login foi validado com sucesso
+    // Indica se o login foi validado com sucesso
     public boolean result = false;
 
-    //Método que verifica se o usuário e senha existem no banco
+    // Verifica se o usuário e a senha existem no banco
     public boolean verificarUsuario(String login, String senha){
-        String sql = ""; // Variável para armazenar a consulta SQL
-        Connection conn = conectarBD(); // Chama o método de conexão
+        String sql = ""; // Cria a string pra montar o comando SQL
+        Connection conn = conectarBD(); // Chama o método que faz a conexão
 
-        //Monta a consulta SQL que vai buscar o nome do usuário com base no login e senha informados
+        // Monta o comando SQL pra buscar o nome do usuário com base no login e senha
         sql = "select nome from usuarios ";
         sql += "where login = '" + login + "'";
         sql += " and senha = '" + senha + "'";
 
         try{
-            //Permite executar comandos SQL no banco
+            // Cria um objeto pra executar o comando SQL
             Statement st = conn.createStatement();
 
-            //Executa a consulta e armazena o resultado
+            // Executa o comando e guarda o resultado
             ResultSet rs = st.executeQuery(sql);
 
-            //Verifica se a consulta retornou algum registro (usuário encontrado)
+            // Se a consulta retornou algo, o usuário existe
             if(rs.next()){
-                //Se encontrou, marca o resultado como verdadeiro e guarda o nome do usuário
+                // Marca que o login deu certo e pega o nome do usuário
                 result = true;
                 nome = rs.getString("nome");
             }
         }catch (Exception e) {
-            //Captura qualquer erro durante a execução do SQL
-            //Aqui também não tem mensagem
+            // Se der erro ao rodar o SQL, ele cai aqui
+            // Também sem mensagem, mas poderia ter
         }
 
-        // Retorna true se o login foi encontrado, ou false se não existir
+        // Retorna true se o login foi encontrado, senão false
         return result;
     }
+}
 
     // Criei essa Main para testar se o código funcionava
     //public static void main(String[] args) {
@@ -84,3 +84,4 @@ public class User {
     //    System.out.println("Usuário válido? " + loginValido);
     //} 
 } // fim da classe
+
