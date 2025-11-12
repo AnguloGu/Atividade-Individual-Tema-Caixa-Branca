@@ -1,74 +1,76 @@
-package login; // Aqui eu defino o pacote onde essa classe está
+package login;
 
-// Importa as bibliotecas necessárias pra conectar no banco
+// Imports usados pelo JDBC para conectar, executar SQL e ler resultados.
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-// Classe usada pra conectar no banco e verificar o login de um usuário
+ // Classe responsável por abrir conexão com o MySQL e validar login.
 public class User {
 
-    // Faz a conexão com o banco de dados
+    // Abre uma conexão com o banco.
     public Connection conectarBD(){
-        Connection conn = null; // Cria uma variável pra guardar a conexão
+        Connection conn = null; // no início nulo; se algo falhar, retorna null.
+
         try{
-            // Aqui é onde o driver do MySQL é iniciado.
-            // professor você tinha colocado "com.mysql.Driver.Manager", mas isso dá erro.
-            // Então eu troquei pra "com.mysql.cj.jdbc.Driver", que é o jeito certo e atual de conectar.
+            // no seu código original: "com.mysql.Driver.Manager" (causa ClassNotFoundException).
+            // eu troquei para o driver moderno do Connector/J:
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // Cria a URL da conexão com o banco (com usuário e senha)
+            // mantive a mesma URL/base do seu exemplo, só usei a forma certa no getConnection.
+            // (professor, aqui estão usuário e senha na URL, como no seu código.)
             String url = "jdbc:mysql://127.0.0.1/test?user=lopes&password=123";
 
-            // Abre a conexão com o banco usando a URL acima
+            // aqui efetivamente abro a conexão
             conn = DriverManager.getConnection(url);
-        }catch (Exception e) {
-            // Se der algum erro (tipo driver faltando ou banco fora do ar),
-            // ele cai aqui. Não tem mensagem, mas daria pra mostrar uma.
+
+        } catch (Exception e) {
+            // no seu original o catch estava vazio;
+            // mas seria interessante logar o erro para facilitar o diagnóstico.
+            // ex.: System.err.println("Falha ao conectar: " + e.getMessage());
         }
-        // Retorna a conexão (ou null se algo deu errado)
         return conn;
     }
+    public String nome = "";        // guarda o nome retornado pela consulta
+    public boolean result = false;  // começa falso; só vira true se a consulta achar o usuário
 
-    // Guarda o nome do usuário que foi encontrado no banco
-    public String nome = "";
-
-    // Indica se o login foi validado com sucesso
-    public boolean result = false;
-
-    // Verifica se o usuário e a senha existem no banco
+    //Verifica se existe um usuário com o login/senha informados.
     public boolean verificarUsuario(String login, String senha){
-        String sql = ""; // Cria a string pra montar o comando SQL
-        Connection conn = conectarBD(); // Chama o método que faz a conexão
+        String sql = "";                 
+        Connection conn = conectarBD(); 
 
-        // Monta o comando SQL pra buscar o nome do usuário com base no login e senha
+        // no seu código original a SQL era concatenada; mantive igual para preservar a lógica.
         sql = "select nome from usuarios ";
         sql += "where login = '" + login + "'";
         sql += " and senha = '" + senha + "'";
 
         try{
-            // Cria um objeto pra executar o comando SQL
             Statement st = conn.createStatement();
-
-            // Executa o comando e guarda o resultado
             ResultSet rs = st.executeQuery(sql);
 
-            // Se a consulta retornou algo, o usuário existe
+            // RAMIFICAÇÃO: se existe pelo menos um registro, o login é válido.
             if(rs.next()){
-                // Marca que o login deu certo e pega o nome do usuário
+                // ao encontrar, marca result=true e lê o nome
                 result = true;
                 nome = rs.getString("nome");
             }
-        }catch (Exception e) {
-            // Se der erro ao rodar o SQL, ele cai aqui
-            // Também sem mensagem, mas poderia ter
+            // no seu código o else não era necessário, porque result já começa false.
+            // mantive assim para não alterar a contagem de nós do fluxo.
+
+            // fechar rs e st aqui evitaria vazamento.
+            // rs.close(); st.close();
+            // e também fechar a conexão ao final (conn.close()).
+
+        } catch (Exception e) {
+            // no seu original este catch também estava vazio; mantive.
         }
 
-        // Retorna true se o login foi encontrado, senão false
+        // retorna true quando o rs.next() entrou; caso contrário permanece false.
         return result;
     }
 }
+
 
     // Criei essa Main para testar se o código funcionava
     //public static void main(String[] args) {
@@ -83,5 +85,6 @@ public class User {
     //    boolean loginValido = user.verificarUsuario("teste", "1234");
     //    System.out.println("Usuário válido? " + loginValido);
     //} 
-} // fim da classe
+ // fim da classe
+
 
