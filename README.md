@@ -36,16 +36,16 @@
             if(rs.next()){ // N11
                 result = true; // N12
                 nome = rs.getString("nome"); // N12
-            } else { // N13
-                result = false; // N13
-            }
-        }catch (Exception e) { } // N14
+            } 
+        }catch (Exception e) { } // N13
         return result; // N14
     } // N14
     } // N14
 
 NOTAÇÃO DE GRAFO DE FLUXO 
-<img width="1920" height="1080" alt="1 (1)" src="https://github.com/user-attachments/assets/55900786-0608-43dc-a91d-3cb95a3ee4d0" />
+
+<img width="1920" height="1080" alt="1 (1)" src="https://github.com/user-attachments/assets/82e52c0f-4e63-4e52-8940-b50460315b11" />
+
 
 COMPLEXIDADE CICLOMÁTICA
 M = E − N + 2P
@@ -60,18 +60,18 @@ M = 4
 
 CAMINHOS BÁSICOS 
 
-Caminho 1 – Execução normal (if verdadeiro)
+Caminho 1 – Execução normal rs.next() verdadeiro
 
-1 → 2 → 3 → 4 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 14
+N1 → N2 → N3 → N4 → N6 → N7 → N8 → N9 → N10 → N11 → N12 → N14
 
-Caminho 2 – Execução normal (if falso)
+Caminho 2 – Execução normal rs.next() falso
 
-1 → 2 → 3 → 4 → 6 → 7 → 8 → 9 → 10 → 11 → 13 → 14
+N1 → N2 → N3 → N4 → N6 → N7 → N8 → N9 → N10 → N11 → N14
 
 Caminho 3 – Falha na conexão (catch do conectarBD)
 
-1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 13 → 14
+N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8 → N9 → N10 → N11 → N14
 
 Caminho 4 – Falha na query (catch do verificarUsuario)
 
-1 → 2 → 3 → 4 → 6 → 7 → 8 → 9 → 10 → 13 → 14
+N1 → N2 → N3 → N4 → N6 → N7 → N8 → N9 → N10 → N13 → N14
