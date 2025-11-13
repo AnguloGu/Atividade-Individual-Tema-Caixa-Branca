@@ -44,7 +44,9 @@
 
 NOTAÇÃO DE GRAFO DE FLUXO 
 
-<img width="1920" height="1080" alt="1 (1)" src="https://github.com/user-attachments/assets/82e52c0f-4e63-4e52-8940-b50460315b11" />
+
+<img width="1920" height="1080" alt="1 (3)" src="https://github.com/user-attachments/assets/c9f0ff0a-fd6d-4f8f-9a1c-2824a3c5fa1b" />
+
 
 
 COMPLEXIDADE CICLOMÁTICA
